@@ -4,14 +4,22 @@ use namespace::autoclean;
 
 BEGIN { extends 'CatalystX::Controller::PSGI'; }
 
-use Plack::App::Directory;
+use Plack::App::File;
 
-my $app_directory = Plack::App::Directory->new(root => TestApp->path_to('../../..'))->to_app;
+has 'app_directory' => (
+    is      => 'ro',
+    default => sub {
+        return Plack::App::File->new(
+            file            => __FILE__,
+            content_type    => 'text/plain',
+        )->to_app;
+    },
+);
 
 sub call {
-    my ( $env ) = @_;
+    my ( $self, $env ) = @_;
 
-    $app_directory->( $env );
+    $self->app_directory->( $env );
 }
 
 1;

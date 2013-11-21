@@ -4,6 +4,9 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 
+our $VERSION = '0.001';
+$VERSION = eval $VERSION;
+
 my @_psgi_actions;
 after 'register_actions' => sub {
     my ( $self, $c ) = @_;
@@ -39,7 +42,9 @@ after 'register_actions' => sub {
                 $env->{PATH_INFO} =~ s|^/$namespace||g;
                 $env->{SCRIPT_NAME} = "/$namespace";
 
-                $c->res->from_psgi_response( $psgi_action->{app}->( $env ) );
+                $c->res->from_psgi_response(
+                    $psgi_action->{app}->( $self, $env )
+                );
             },
         );
 

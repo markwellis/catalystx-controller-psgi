@@ -6,17 +6,28 @@ BEGIN { extends 'CatalystX::Controller::PSGI'; }
 
 use Plack::Response;
 
-my $lolcopter = <<END;
+has 'lolcopter' => (
+    is      => 'ro',
+    builder => '_build_lolcopter',
+);
+sub _build_lolcopter{
+    return <<END;
 ROFL:ROFL:ROFL:ROFL
          _^___
- L    __/   [] \    
-LOL===__        \ 
+ L    __/   [] \
+LOL===__        \
  L      \________]
          I   I
         --------/
 END
+}
 
-my $hypnotoad = <<END;
+has 'hypnotoad' => (
+    is      => 'ro',
+    builder => '_build_hypnotoad',
+);
+sub _build_hypnotoad {
+    return <<END;
                ,'``.._   ,'``.
               :,--._:)\,:,._,.:       All Glory to
               :`--,''   :`...';\      the HYPNO TOAD!
@@ -37,23 +48,24 @@ my $hypnotoad = <<END;
                |/`.\`'        ,','); SSt
                    `         (/  (/
 END
+}
 
 my $lolcopter_app = sub {
-    my ( $env ) = @_;
+    my ( $self, $env ) = @_;
 
     my $res = Plack::Response->new(200);
-    $res->content_type('text/html');
-    $res->body( "<pre>${lolcopter}</pre>" );
+    $res->content_type('text/plain');
+    $res->body( $self->lolcopter );
 
     return $res->finalize;
 };
 
 my $hypnotoad_app = sub {
-    my ( $env ) = @_;
+    my ( $self, $env ) = @_;
 
     my $res = Plack::Response->new(200);
-    $res->content_type('text/html');
-    $res->body( "<pre>${hypnotoad}</pre>" );
+    $res->content_type('text/plain');
+    $res->body( $self->hypnotoad );
 
     return $res->finalize;
 };
@@ -64,7 +76,7 @@ __PACKAGE__->mount( '/hypnotoad' => $hypnotoad_app );
 sub index: Private {
     my ( $self, $c ) = @_;
 
-    $c->res->body('sub index: Private');
+    $c->res->body('sub index: Private content');
 }
 
 sub other: Path('other') Args(0) {
