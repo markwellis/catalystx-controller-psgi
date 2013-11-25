@@ -24,7 +24,7 @@ subtest 'normal actions' => sub {
         next if $action =~ m{\w+/_(?:ACTION|END|DISPATCH|AUTO|BEGIN)};
         $actions->{ $action } = $c->dispatcher->_action_hash->{ $action };
     }
-    is( keys %{$actions}, 5, '5 actions' );
+    is( keys %{$actions}, 6, '6 actions' );
 };
 
 subtest 'file/call' => sub {
@@ -67,34 +67,34 @@ subtest '/ascii/lol/copter' => sub {
     subtest 'action' => sub {
         plan tests => 5;
 
-        my $call = $actions->{'ascii/copter'};
+        my $call = $actions->{'ascii/lol/copter'};
 
         is( $call->reverse, 'ascii/lol/copter', 'reverse' );
         is( $call->namespace, 'ascii', 'namespace' );
-        is( $call->name, 'copter', 'name' );
+        is( $call->name, 'lol/copter', 'name' );
         is( $call->class, 'TestApp::Controller::Ascii', 'class' );
         is_deeply( $call->attributes, { Path => ['ascii/lol/copter'] }, 'attributes' );
     };
 };
 
-subtest '/ascii/lol/copter' => sub {
+subtest '/ascii/not/copter' => sub {
     plan tests => 3;
 
-    my ( $res, $c ) = ctx_request('/ascii/lol/copter');
+    my ( $res, $c ) = ctx_request('/ascii/not/copter');
 
     ok( $res->is_success, "response is succcess" );
-    is( $res->decoded_content, $c->controller('Ascii')->lolcopter, "content is correct" );
+    is( $res->decoded_content, "totally not a lolcopter", "content is correct" );
 
     subtest 'action' => sub {
         plan tests => 5;
 
-        my $call = $actions->{'ascii/copter'};
+        my $call = $actions->{'ascii/not/copter'};
 
-        is( $call->reverse, 'ascii/lol/copter', 'reverse' );
+        is( $call->reverse, 'ascii/not/copter', 'reverse' );
         is( $call->namespace, 'ascii', 'namespace' );
-        is( $call->name, 'copter', 'name' );
+        is( $call->name, 'not/copter', 'name' );
         is( $call->class, 'TestApp::Controller::Ascii', 'class' );
-        is_deeply( $call->attributes, { Path => ['ascii/lol/copter'] }, 'attributes' );
+        is_deeply( $call->attributes, { Path => ['ascii/not/copter'] }, 'attributes' );
     };
 };
 

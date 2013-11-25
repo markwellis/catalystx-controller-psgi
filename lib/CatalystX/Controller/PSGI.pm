@@ -57,14 +57,156 @@ sub mount {
     my ( $class, $path, $app ) = @_;
 
     $path =~ s|^/||g;
-    my $name = (split qr|/|, $path)[-1];
+    my $name = $path;
 
     push @_psgi_actions, {
-        name    => $name,
-        class   => $class,
-        path    => $path,
-        app     => $app,
+        name        => $name,
+        class       => $class,
+        path        => $path,
+        app         => $app,
     };
 }
+
+=head1 NAME
+
+CatalystX::Controller::PSGI - use a PSGI app in a Catalyst Controller
+
+=head1 SYNOPSIS
+
+    package TestApp::Controller::File;
+    use Moose;
+    use namespace::autoclean;
+
+    BEGIN { extends 'CatalystX::Controller::PSGI'; }
+
+    use Plack::App::File;
+    use Plack::Response;
+
+    has 'app_file' => (
+        is      => 'ro',
+        default => sub {
+            return Plack::App::File->new(
+                file            => __FILE__,
+                content_type    => 'text/plain',
+            )->to_app;
+        },
+    );
+
+    sub call {
+        my ( $self, $env ) = @_;
+
+        $self->app_file->( $env );
+    }
+
+    my $hello_app = sub {
+        my ( $self, $env ) = @_;
+
+        my $res = Plack::Response->new(200);
+        $res->content_type('text/plain');
+        $res->body("hello world");
+
+        return $res->finalize;
+    };
+
+    __PACKAGE__->mount( '/hello/world' => $hello_app );
+
+    __PACKAGE__->meta->make_immutable;
+
+=head1 DESCRIPTION
+
+Use PSGI apps inside Catalyst Controllers.
+
+Combine this with L<Catalyst::Component::InstancePerContext> if you want to access $c in your psgi app
+
+=head1 Usage
+
+=head2 call method
+
+If this method is provided, it will be called as the root action of that controller.
+
+    package TestApp::Controller::File;
+    use Moose;
+    use namespace::autoclean;
+
+    BEGIN { extends 'CatalystX::Controller::PSGI'; }
+
+    use Plack::App::File;
+
+    has 'app_file' => (
+        is      => 'ro',
+        default => sub {
+            return Plack::App::File->new(
+                file            => __FILE__,
+                content_type    => 'text/plain',
+            )->to_app;
+        },
+    );
+
+    sub call {
+        my ( $self, $env ) = @_;
+
+        $self->app_file->( $env );
+    }
+
+    __PACKAGE__->meta->make_immutable;
+
+E.g. in the above example it will be /file/
+
+Works similar to L<Plack::Component>, except that as well as $env being passed in, $self is as well. Where $env is the psgi env, and $self is the Catalyst Controller.
+
+=head2 mount
+
+Mount a path within the controller to an app.
+
+    package TestApp::Controller::Hello;
+    use Moose;
+    use namespace::autoclean;
+
+    BEGIN { extends 'CatalystX::Controller::PSGI'; }
+
+    use Plack::Response;
+
+    my $hello_app = sub {
+        my ( $self, $env ) = @_;
+
+        my $res = Plack::Response->new(200);
+        $res->content_type('text/plain');
+        $res->body("hello world");
+
+        return $res->finalize;
+    };
+
+    __PACKAGE__->mount( '/world' => $hello_app );
+
+    __PACKAGE__->meta->make_immutable;
+
+In the above example the url /hello/world will be bound to the $hello_app. As with call, $self and $env will be passed in.
+
+=head1 EXAMPLES
+
+There is an example app in the test suite, see it for more info.
+
+=head1 SUPPORT
+
+Please submit bugs through L<https://github.com/n0body-/exception-simple/issues>
+
+For other issues, contact the maintainer
+
+=head1 AUTHOR
+
+n0body E<lt>n0body@thisaintnews.comE<gt>
+
+=head1 SEE ALSO
+
+L<http://thisaintnews.com>, L<Catalyst::Component::InstancePerContext>
+
+=head1 LICENSE
+
+Copyright (C) 2013 by n0body L<http://thisaintnews.com/>
+
+This library is free software, you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut
 
 1;

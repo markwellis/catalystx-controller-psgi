@@ -60,6 +60,16 @@ my $lolcopter_app = sub {
     return $res->finalize;
 };
 
+my $notcopter_app = sub {
+    my ( $self, $env ) = @_;
+
+    my $res = Plack::Response->new(200);
+    $res->content_type('text/plain');
+    $res->body( "totally not a lolcopter" );
+
+    return $res->finalize;
+};
+
 my $hypnotoad_app = sub {
     my ( $self, $env ) = @_;
 
@@ -71,6 +81,7 @@ my $hypnotoad_app = sub {
 };
 
 __PACKAGE__->mount( '/lol/copter' => $lolcopter_app );
+__PACKAGE__->mount( '/not/copter' => $notcopter_app );
 __PACKAGE__->mount( '/hypnotoad' => $hypnotoad_app );
 
 sub index: Private {
@@ -85,4 +96,4 @@ sub other: Path('other') Args(0) {
     $c->res->body('normal controller methods work as well!');
 }
 
-1;
+__PACKAGE__->meta->make_immutable;

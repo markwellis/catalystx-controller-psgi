@@ -6,7 +6,7 @@ BEGIN { extends 'CatalystX::Controller::PSGI'; }
 
 use Plack::App::File;
 
-has 'app_directory' => (
+has 'app_file' => (
     is      => 'ro',
     default => sub {
         return Plack::App::File->new(
@@ -19,7 +19,7 @@ has 'app_directory' => (
 sub call {
     my ( $self, $env ) = @_;
 
-    $self->app_directory->( $env );
+    $self->app_file->( $env );
 }
 
-1;
+__PACKAGE__->meta->make_immutable;
