@@ -4,7 +4,7 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 
-our $VERSION = '0.001';
+our $VERSION = '0.001001';
 $VERSION = eval $VERSION;
 
 my @_psgi_actions;
@@ -184,13 +184,10 @@ In the above example the url /hello/world will be bound to the $hello_app. As wi
 
 =head1 EXAMPLES
 
-There is an example app in the test suite, see it for more info.
+L<http://www.catalystframework.org/calendar/2013/16>
+L<http://www.catalystframework.org/calendar/2013/17>
 
-=head1 SUPPORT
-
-Please submit bugs through L<https://github.com/n0body-/exception-simple/issues>
-
-For other issues, contact the maintainer
+There is also an example app in the test suite
 
 =head1 AUTHOR
 

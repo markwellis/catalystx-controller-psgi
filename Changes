@@ -1,4 +1,8 @@
 Revision history for perl module CatalystX::Controller::PSGI
 
+0.001001 2013-12-21
+    - Small documentation fix
+    - Link to the Catalyst advent articles
+
 0.001 2013-10-21
     - First release
