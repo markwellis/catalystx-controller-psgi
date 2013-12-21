@@ -1,0 +1,10 @@
+.*\.swp
+\.git
+\.bak
+\.travis\.yml
+README\.md
+MYMETA.*
+MANIFEST\.SKIP
+blib
+\.tar\.gz
+pm_to_blib
