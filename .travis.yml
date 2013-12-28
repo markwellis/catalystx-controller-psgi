@@ -7,9 +7,12 @@ perl:
   - "5.10"
   - "5.8"
 before_install:
-  cpanm -n Devel::Cover::Report::Coveralls
-install:
+  cpanm -n Devel::Cover::Report::Coveralls CPAN::Meta
+before_script:
   - perl Makefile.PL
+  - cpanm --notest --metacpan --skip-satisfied --installdeps .
   - make manifest
+  - make distdir
+  - cd $(perl -MCPAN::Meta -e '$m = CPAN::Meta->load_file("MYMETA.yml"); print $m->name . "-" . $m->version')
 script:
-  - cover -test -report coveralls -make 'make disttest'
+  - cover -test -report coveralls
