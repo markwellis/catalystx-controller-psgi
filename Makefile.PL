@@ -13,8 +13,8 @@ test_requires 'Plack::Response';
 test_requires 'Plack::App::File';
 
 resources(
-    'bugtracker'  => 'https://github.com/n0body-/catalystx-controller-psgi/issues',
-    'repository'  => 'https://github.com/n0body-/catalystx-controller-psgi.git',
+    'bugtracker'  => 'https://github.com/markwellis/catalystx-controller-psgi/issues',
+    'repository'  => 'https://github.com/markwellis/catalystx-controller-psgi.git',
 );
 
 auto_install;

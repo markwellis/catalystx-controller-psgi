@@ -4,7 +4,7 @@ use namespace::autoclean;
 
 BEGIN { extends 'Catalyst::Controller' }
 
-our $VERSION = '0.001001';
+our $VERSION = '0.001002';
 $VERSION = eval $VERSION;
 
 my @_psgi_actions;
@@ -191,15 +191,15 @@ There is also an example app in the test suite
 
 =head1 AUTHOR
 
-n0body E<lt>n0body@thisaintnews.comE<gt>
+Mark Ellis E<lt>markellis@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
-L<http://thisaintnews.com>, L<Catalyst::Component::InstancePerContext>
+L<Catalyst::Component::InstancePerContext>
 
 =head1 LICENSE
 
-Copyright (C) 2013 by n0body L<http://thisaintnews.com/>
+Copyright 2014 by Mark Ellis E<lt>markellis@cpan.orgE<gt>
 
 This library is free software, you can redistribute it and/or modify
 it under the same terms as Perl itself.
